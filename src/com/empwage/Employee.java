@@ -7,9 +7,22 @@ public class Employee {
     public static final int IS_FULL_TIME=1;
     public static final int IS_PART_TIME=2;
 
-    public static int computeEmpWage(String company,int empRatePerHour,int numOfWorkingDays,int maxHoursPerMonth) {
-        int empHours = 0, empWage = 0, totalEmpWage = 0;
-        int totalEmpHrs = 0, totalWorkingDays = 0;
+    private final String company;
+    private final int empRatePerHour;
+    private final int numOfWorkingDays;
+    private final int maxHoursPerMonth;
+    private int totalEmpWage;
+
+    public Employee(String company,int empRatePerHour,int numOfWorkingDays,int maxHoursPerMonth)
+    {
+        this.company=company;
+        this.empRatePerHour=empRatePerHour;
+        this.numOfWorkingDays=numOfWorkingDays;
+        this.maxHoursPerMonth=maxHoursPerMonth;
+
+    }
+    public void computeEmpWage() {
+        int empHours = 0,totalEmpHrs = 0, totalWorkingDays = 0;
 
         while (totalEmpHrs <= maxHoursPerMonth && totalWorkingDays < numOfWorkingDays) {
             totalWorkingDays++;
@@ -29,12 +42,18 @@ public class Employee {
             System.out.println("Day: " + totalWorkingDays + " Emp hours " + empHours);
         }
         totalEmpWage = totalEmpHrs * empRatePerHour;
-        System.out.println(" Total Emp Wage" + totalEmpWage);
-        return totalEmpWage;
     }
 
+    @Override
+    public String toString(){
+        return "Total Emp Wage for company: " +company+ " is: " + totalEmpWage;
+    }
     public static void main(String[] args) {
-        computeEmpWage("DMart",20,2,10);
-        computeEmpWage("Reliance",10,4,20);
+        Employee dMart = new Employee("DMart",20,2,10);
+        Employee reliance = new Employee("Reliance",10,4,20);
+        dMart.computeEmpWage();
+        System.out.println(dMart);
+        reliance.computeEmpWage();
+        System.out.println(reliance);
     }
 }
