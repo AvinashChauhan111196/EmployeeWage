@@ -2,58 +2,70 @@ package com.empwage;
 
 import java.util.Random;
 
-public class Employee {
+public class Employee implements IEmployeeWage{
+    // Declaring a constant
+    public static final int IS_FULLTIME = 1;
+    public static final int IS_PARTTIME = 2;
+    private int numOfCompany = 0;
+    private CompanyInfo[] companyInfoArray;
 
-    public static final int IS_FULL_TIME=1;
-    public static final int IS_PART_TIME=2;
-
-    private final String company;
-    private final int empRatePerHour;
-    private final int numOfWorkingDays;
-    private final int maxHoursPerMonth;
-    private int totalEmpWage;
-
-    public Employee(String company,int empRatePerHour,int numOfWorkingDays,int maxHoursPerMonth)
-    {
-        this.company=company;
-        this.empRatePerHour=empRatePerHour;
-        this.numOfWorkingDays=numOfWorkingDays;
-        this.maxHoursPerMonth=maxHoursPerMonth;
-
+    public Employee() {
+        companyInfoArray = new CompanyInfo[6];
     }
-    public void computeEmpWage() {
-        int empHours = 0,totalEmpHrs = 0, totalWorkingDays = 0;
 
-        while (totalEmpHrs <= maxHoursPerMonth && totalWorkingDays < numOfWorkingDays) {
+    public void addCompanyInfo(String companyName, int empRatePerHour, int noOfWorkingDays, int maxHoursPerMonth) {
+        companyInfoArray[numOfCompany] = new CompanyInfo(companyName, empRatePerHour, noOfWorkingDays, maxHoursPerMonth);
+        numOfCompany++;
+    }
+
+    public void computeEmpWage() {
+        for (int i = 0; i < numOfCompany; i++) {
+            companyInfoArray[i].setTotalEmpWage(this.computeWage(companyInfoArray[i])); // inside bracket return totalEmpWage
+            System.out.println(companyInfoArray[i]);
+        }
+    }
+    /*
+    We have used static method here so that we can directly call it inside main
+    */
+    public static int computeWage(CompanyInfo companyInfo) {
+// Declaring the variables
+        int empHrs = 0;
+        int empWage = 0;
+        int totalEmpHrs = 0;
+        int totalWorkingDays = 0;
+        int totalWage = 0;
+        /*
+         * Using random method to generate random numbers 0, 1 and 2
+         */
+        while (totalEmpHrs <= companyInfo.getMaxHoursPerMonth() && totalWorkingDays < companyInfo.getNoOfWorkingDays()) {
             totalWorkingDays++;
             Random random = new Random();
             int empCheck = random.nextInt(3);
             switch (empCheck) {
-                case IS_FULL_TIME:
-                    empHours = 8;
+                case IS_FULLTIME: // FullTime Employee
+                    empHrs = 8;
                     break;
-                case IS_PART_TIME:
-                    empHours = 4;
+                case IS_PARTTIME: // PartTime Employee
+                    empHrs = 4;
                     break;
-                default:
-                    empHours = 0;
+                default: // Employee is absent
+                    empHrs = 0;
             }
-            totalEmpHrs += empHours;
-            System.out.println("Day: " + totalWorkingDays + " Emp hours " + empHours);
+            empWage = companyInfo.getEmpRatePerHour() * empHrs;
+            totalEmpHrs += empHrs;
         }
-        totalEmpWage = totalEmpHrs * empRatePerHour;
+        totalWage = totalEmpHrs * companyInfo.getEmpRatePerHour();
+        return totalWage;
     }
 
-    @Override
-    public String toString(){
-        return "Total Emp Wage for company: " +company+ " is: " + totalEmpWage;
-    }
     public static void main(String[] args) {
-        Employee dMart = new Employee("DMart",20,2,10);
-        Employee reliance = new Employee("Reliance",10,4,20);
-        dMart.computeEmpWage();
-        System.out.println(dMart);
-        reliance.computeEmpWage();
-        System.out.println(reliance);
+        System.out.println("Welcome To Employee Wage Computation Program");
+        IEmployeeWage employeeWageBuilder = new Employee();
+        ((Employee) employeeWageBuilder).addCompanyInfo("Infosys", 150, 2, 10);
+        ((Employee) employeeWageBuilder).addCompanyInfo("TCS" , 200, 3, 10);
+        ((Employee) employeeWageBuilder).addCompanyInfo("Accenture", 100, 4, 12);
+        ((Employee) employeeWageBuilder).addCompanyInfo("Jio", 180, 3, 15);
+        ((Employee) employeeWageBuilder).addCompanyInfo("Airtel", 160, 4, 14);
+        ((Employee) employeeWageBuilder).computeEmpWage();
     }
 }
