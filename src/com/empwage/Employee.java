@@ -17,7 +17,8 @@ public class Employee {
 
         while(totalEmpHrs<=MAX_HRS_IN_MONTH && totalWorkingDays <Num_OF_WORKING_DAYS) {
             totalWorkingDays++;
-            int empCheck = (int) Math.floor(Math.random() * 10) % 3;
+            Random random = new Random();
+            int empCheck = random.nextInt(3);
             switch (empCheck) {
                 case IS_FULL_TIME:
                     empHours = 8;
